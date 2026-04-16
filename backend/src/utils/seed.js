@@ -125,6 +125,9 @@ const generateSeedData = () => {
     const adjective = pickRandom(adjectives);
     const title = `${adjective} ${noun} by ${pickRandom(brands)}`;
 
+    const formattedTitle = title.replace(/\s+/g, "");
+    const imageUrl = `https://picsum.photos/seed/${formattedTitle}/400/300`;
+
     data.push({
       title,
       description: `Enhance your life with this ${title.toLowerCase()}. Crafted for durability and style, it features top-tier materials and innovative design fitting perfectly in the ${category.toLowerCase()} category. You won't regret adding this to your collection. Highly recommended for daily use.`,
@@ -136,6 +139,7 @@ const generateSeedData = () => {
             ? generatePrice(20, 500)
             : generatePrice(5, 100),
       brand: pickRandom(brands),
+      imageUrl,
       isAvailable: Math.random() > 0.1, // 90% chance to be true
     });
   }

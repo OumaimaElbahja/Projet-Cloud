@@ -214,36 +214,51 @@ export default function SearchPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {data?.items.map((item: Item) => (
-                  <Card key={item._id} className="flex flex-col h-full overflow-hidden transition-all hover:shadow-md group">
-                    <div className="h-48 w-full bg-muted flex items-center justify-center overflow-hidden">
+                  <Card key={item._id} className="flex flex-col h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group rounded-xl border-border/40 bg-card/60">
+                    <div className="h-48 w-full bg-muted flex items-center justify-center overflow-hidden relative">
+                      <Badge className="absolute top-3 right-3 bg-background/80 text-foreground backdrop-blur-sm shadow-sm ring-1 ring-border border-0 z-10">
+                        {item.category}
+                      </Badge>
                       <img 
                         src={item.imageUrl} 
                         alt={item.title}
-                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" 
+                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://via.placeholder.com/400x300?text=No+Image';
+                        }}
                       />
                     </div>
-                    <CardHeader className="flex-1">
+                    <CardHeader className="flex-1 pb-2">
                       <div className="flex justify-between items-start mb-2">
-                        <Badge variant="secondary" className="text-xs">{item.category}</Badge>
-                        <span className="font-bold text-lg">${item.price.toFixed(2)}</span>
+                        <CardTitle className="text-lg leading-tight mt-1 line-clamp-1">{item.title}</CardTitle>
                       </div>
-                      <CardTitle className="text-base leading-tight mt-1 line-clamp-2">{item.title}</CardTitle>
-                      <CardDescription className="text-xs">{item.brand}</CardDescription>
+                      <CardDescription className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                        ${item.price.toFixed(2)}
+                      </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-foreground/80 line-clamp-3">
+                    <CardContent className="pt-0">
+                      <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                         {item.description}
                       </p>
                       {item.score && (
                         <p className="text-xs text-muted-foreground mt-3">
-                          Relevance Score: {item.score.toFixed(2)}
+                          Relevance: <span className="font-medium text-foreground">{item.score.toFixed(2)}</span>
                         </p>
                       )}
                     </CardContent>
-                    <CardFooter className="pt-0 mt-auto">
-                      <Button className="w-full" disabled={!item.isAvailable}>
-                        {item.isAvailable ? 'View Details' : 'Out of Stock'}
-                      </Button>
+                    <CardFooter className="pt-0 mt-auto flex items-center justify-between opacity-90 pb-3">
+                      <span className="text-xs text-muted-foreground font-medium flex items-center gap-1">
+                        By {item.brand || 'Unknown'}
+                      </span>
+                      {item.isAvailable ? (
+                        <span className="text-xs font-semibold text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400 px-2.5 py-0.5 rounded-full">
+                          In Stock
+                        </span>
+                      ) : (
+                        <span className="text-xs font-semibold text-rose-600 bg-rose-100 dark:bg-rose-900/30 dark:text-rose-400 px-2.5 py-0.5 rounded-full">
+                          Out of Stock
+                        </span>
+                      )}
                     </CardFooter>
                   </Card>
                 ))}
